@@ -10,6 +10,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [addedToCart, setAddedToCart] = useState(false); 
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,6 +26,13 @@ function ProductDetails() {
     };
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    setAddedToCart(true);
+    // Reset button back to orange after 2 seconds
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
 
   if (loading) return <div className="flex justify-center items-center h-screen bg-neutral-950 text-amber-500 animate-pulse">Loading details...</div>;
   if (error) return <div className="flex justify-center items-center h-screen bg-neutral-950 text-red-500">{error}</div>;
@@ -52,15 +60,20 @@ function ProductDetails() {
           <div className="p-8 md:w-1/2 flex flex-col justify-center">
             <span className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-2">{product.category}</span>
             <h1 className="text-4xl font-serif text-white mb-4">{product.name}</h1>
-            <p className="text-neutral-400 mb-8 leading-relaxed">{product.description}</p>
+            <p className="text-neutral-300 text-lg mb-8 leading-relaxed">{product.description}</p>
             
             <div className="text-3xl font-bold text-amber-500 mb-8">₹{product.price}</div>
             
+            {/* Updated Button with Green Animation */}
             <button 
-              onClick={() => addToCart(product)}
-              className="w-full bg-amber-600 hover:bg-amber-500 text-black font-bold py-4 rounded-lg uppercase tracking-wider transition shadow-lg shadow-amber-500/20"
+              onClick={handleAddToCart}
+              className={`w-full py-4 rounded-lg font-bold uppercase tracking-widest transition-all duration-300 shadow-lg ${
+                addedToCart
+                  ? 'bg-green-600 text-white shadow-green-500/20'
+                  : 'bg-amber-600 hover:bg-amber-500 text-black shadow-amber-500/20'
+              }`}
             >
-              Add to Cart
+              {addedToCart ? '✓ ADDED TO CART' : 'ADD TO CART'}
             </button>
           </div>
         </div>
