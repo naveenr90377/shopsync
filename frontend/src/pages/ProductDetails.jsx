@@ -1,10 +1,11 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; 
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
 
 function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate(); 
   const { addToCart } = useCart();
   
   const [product, setProduct] = useState(null);
@@ -30,7 +31,6 @@ function ProductDetails() {
   const handleAddToCart = () => {
     addToCart(product);
     setAddedToCart(true);
-    // Reset button back to orange after 2 seconds
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
@@ -41,9 +41,15 @@ function ProductDetails() {
   return (
     <div className="min-h-screen bg-neutral-950 text-white px-4 py-12">
       <div className="max-w-5xl mx-auto">
-        <Link to="/products" className="text-amber-500 hover:text-amber-400 mb-8 inline-block font-medium tracking-wide">
-          ← Back to Products
-        </Link>
+        
+        
+        <button 
+          onClick={() => navigate(-1)} 
+          className="text-amber-500 hover:text-amber-400 mb-8 inline-flex items-center gap-2 font-medium tracking-wide group cursor-pointer bg-transparent border-none"
+        >
+          <span className="group-hover:-translate-x-1 transition-transform duration-300">←</span> 
+          Back to Results
+        </button>
 
         <div className="bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden border border-neutral-800 flex flex-col md:flex-row">
           
@@ -64,7 +70,7 @@ function ProductDetails() {
             
             <div className="text-3xl font-bold text-amber-500 mb-8">₹{product.price}</div>
             
-            {/* Updated Button with Green Animation */}
+            {/* Add to Cart Button with Green Animation */}
             <button 
               onClick={handleAddToCart}
               className={`w-full py-4 rounded-lg font-bold uppercase tracking-widest transition-all duration-300 shadow-lg ${
@@ -73,8 +79,18 @@ function ProductDetails() {
                   : 'bg-amber-600 hover:bg-amber-500 text-black shadow-amber-500/20'
               }`}
             >
-              {addedToCart ? '✓ ADDED TO CART' : 'ADD TO CART'}
+              {addedToCart ? ' ADDED TO CART' : 'ADD TO CART'}
             </button>
+
+            <div className="mt-6 text-center">
+              <button 
+                onClick={() => navigate(-1)} 
+                className="text-neutral-500 hover:text-white underline text-sm transition-colors"
+              >
+                ← Return to previous page
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
